@@ -5,7 +5,6 @@ import { persist} from "zustand/middleware";
 export interface Transaction{
     id:string;
     amount:number;
-    type:"income" | "expense";
     category:string;
     date:string;
     description?:string;
@@ -15,11 +14,16 @@ interface TransactionState {
     transactions: Transaction[];
     addTransaction: (t:Omit<Transaction,"id">) => void;
     deleteTransaction: (id: string) => void;
+
+    // summary selectors
+    getIncome: () => number;
+    getExpenses: () => number;
+    getBalance: () => number;
 }
 
 export const useTransactionStore = create<TransactionState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       transactions: [],
 
       addTransaction: (t) =>
@@ -31,6 +35,18 @@ export const useTransactionStore = create<TransactionState>()(
         set((state) => ({
           transactions: state.transactions.filter((tx) => tx.id !== id),
         })),
+      getIncome: () => {
+          return 1800
+      },
+      getExpenses: () => {
+          const tx = get().transactions;
+          return tx.reduce((sum, t) => sum + t.amount, 0)
+      },
+      getBalance: () => {
+          const income = get().getIncome();
+          const expenses = get().getExpenses();
+          return income - expenses;
+      },
     }),
     {
       name: "finance-transactions", // key used in localStorage

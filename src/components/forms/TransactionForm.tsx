@@ -5,8 +5,7 @@ type TransactionType = "income" | "expense";
 
 export default function TransactionForm() {
   const [amount, setAmount] = useState("");
-  const [type, setType] = useState<TransactionType>("expense");
-  const [category, setCategory] = useState("Food");
+  const [category, setCategory] = useState("");
   const [date, setDate] = useState(
     () => new Date().toISOString().split("T")[0]
   );
@@ -17,9 +16,8 @@ export default function TransactionForm() {
     e.preventDefault();
 
     const newTransaction = {
-      amount: Number(amount),
-      type,
       category,
+      amount: Number(amount),
       date,
       description: description.trim() || "No description",
     };
@@ -44,6 +42,20 @@ export default function TransactionForm() {
       </h2>
 
       <form className="space-y-6" onSubmit={handleSubmit}>
+        {/* Category */}
+        <div className="flex flex-col">
+          <label className="text-sm font-semibold text-gray-700 mb-2">
+            Transaction Type
+          </label>
+          <input
+            type="text"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50"
+            placeholder="Enter a category (e.g., Food, Transport, Bills)"
+          />
+        </div>
+
         {/* Amount */}
         <div className="flex flex-col">
           <label className="text-sm font-semibold text-gray-700 mb-2">
@@ -58,41 +70,6 @@ export default function TransactionForm() {
             placeholder="Enter amount"
             required
           />
-        </div>
-
-        {/* Type */}
-        <div className="flex flex-col">
-          <label className="text-sm font-semibold text-gray-700 mb-2">
-            Type
-          </label>
-          <select
-            value={type}
-            onChange={(e) => setType(e.target.value as TransactionType)}
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50"
-          >
-            <option value="expense">Expense</option>
-            <option value="income">Income</option>
-          </select>
-        </div>
-
-        {/* Category */}
-        <div className="flex flex-col">
-          <label className="text-sm font-semibold text-gray-700 mb-2">
-            Category
-          </label>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50"
-          >
-            <option>Food</option>
-            <option>Transport</option>
-            <option>Shopping</option>
-            <option>Bills</option>
-            <option>Rent</option>
-            <option>Salary</option>
-            <option>Other</option>
-          </select>
         </div>
 
         {/* Date */}
