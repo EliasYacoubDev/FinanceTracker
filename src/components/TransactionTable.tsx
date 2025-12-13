@@ -2,11 +2,12 @@ import { useTransactionStore } from "../store/transactionStore";
 
 export default function TransactionTable() {
   const transactions = useTransactionStore((state) => state.transactions);
+  const expenses = transactions.filter((t) => t.type === "expense");
   const deleteTransaction = useTransactionStore(
     (state) => state.deleteTransaction
   );
 
-  if (transactions.length === 0) {
+  if (expenses.length === 0) {
     return (
       <div className="mt-10 bg-white p-6 rounded-xl shadow text-gray-500 text-lg">
         No transactions added yet.
@@ -16,24 +17,24 @@ export default function TransactionTable() {
   return (
     <div className="mt-10 ml-2 bg-white shadow-xl rounded-xl p-8 w-full max-w-4xl border border-gray-100">
       <h2 className="text-3xl font-bold mb-6 text-gray-800 tracking-tight">
-        Transactions
+        Recent Expenses
       </h2>
       <table className="w-full border-collapse">
         <thead>
           <tr className="bg-gray-100 text-left text-gray-700">
-            <th className="p-3">Transaction Type</th>
+            <th className="p-3">Expense Type</th>
             <th className="p-3">Date</th>
-            <th className="p-3">Description</th>
+            <th className="p-3">Notes</th>
             <th className="p-3">Amount</th>
             <th className="p-3">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {transactions.map((t) => (
+          {expenses.map((t) => (
             <tr key={t.id} className="border-b hover:bg-gray-50">
               <td className="p-3">{t.category}</td>
               <td className="p-3">{t.date}</td>
-              <td className="p-3 text-gray-600">{t.description}</td>
+              <td className="p-3 text-gray-600">{t.notes}</td>
               <td className="p-3 font-semibold">
                 <span className="text-red-600">- ${t.amount}</span>
               </td>

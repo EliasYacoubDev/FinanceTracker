@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { useTransactionStore } from "../../store/transactionStore";
+import {
+  type Transaction,
+  useTransactionStore,
+} from "../../store/transactionStore";
 
-type TransactionType = "income" | "expense";
-
-export default function TransactionForm() {
+export default function ExpenseForm() {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
   const [date, setDate] = useState(
@@ -15,20 +16,15 @@ export default function TransactionForm() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const newTransaction = {
+    const newTransaction: Omit<Transaction, "id"> = {
+      type: "expense",
       category,
       amount: Number(amount),
       date,
-      description: description.trim() || "No description",
+      notes: description.trim() || "",
     };
 
     addTransaction(newTransaction);
-
-    console.log("Transaction added:", newTransaction);
-    console.log(
-      "All transactions:",
-      useTransactionStore.getState().transactions
-    );
 
     // Clear inputs
     setAmount("");
@@ -38,14 +34,14 @@ export default function TransactionForm() {
   return (
     <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-xl border border-gray-100">
       <h2 className="text-3xl font-bold mb-8 text-gray-800 tracking-tight">
-        Add Transaction
+        Add Expenses
       </h2>
 
       <form className="space-y-6" onSubmit={handleSubmit}>
         {/* Category */}
         <div className="flex flex-col">
           <label className="text-sm font-semibold text-gray-700 mb-2">
-            Transaction Type
+            Expense Type
           </label>
           <input
             type="text"
@@ -89,14 +85,13 @@ export default function TransactionForm() {
         {/* Description */}
         <div className="flex flex-col">
           <label className="text-sm font-semibold text-gray-700 mb-2">
-            Description
+            Notes
           </label>
           <input
             type="text"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50"
-            placeholder="Optional"
           />
         </div>
 
@@ -105,7 +100,7 @@ export default function TransactionForm() {
           type="submit"
           className="w-full bg-blue-600 text-white py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-all shadow-sm hover:shadow-lg"
         >
-          Add Transaction
+          Add Expense
         </button>
       </form>
     </div>

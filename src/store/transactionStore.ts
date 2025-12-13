@@ -4,10 +4,11 @@ import { persist} from "zustand/middleware";
 
 export interface Transaction{
     id:string;
+    type:"income" | "expense";
+    category?:string;
     amount:number;
-    category:string;
     date:string;
-    description?:string;
+    notes?:string;
 }
 
 interface TransactionState {
@@ -36,11 +37,14 @@ export const useTransactionStore = create<TransactionState>()(
           transactions: state.transactions.filter((tx) => tx.id !== id),
         })),
       getIncome: () => {
-          return 1800
+          const tx = get().transactions;
+          return tx.filter((t)=>t.type === "income")
+                    .reduce((sum, t) => sum + t.amount, 0)
       },
       getExpenses: () => {
           const tx = get().transactions;
-          return tx.reduce((sum, t) => sum + t.amount, 0)
+          return tx.filter((t)=>t.type === "expense")
+                    .reduce((sum, t) => sum + t.amount, 0)
       },
       getBalance: () => {
           const income = get().getIncome();
