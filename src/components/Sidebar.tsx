@@ -1,5 +1,6 @@
 import { FiLogOut } from "react-icons/fi";
 import { MdDashboard, MdReceipt } from "react-icons/md";
+import { useAuthStore } from "../store/authStore";
 
 export default function Sidebar({
   current,
@@ -8,6 +9,7 @@ export default function Sidebar({
   current: string;
   onChange: (section: string) => void;
 }) {
+  const logout = useAuthStore((state) => state.logout);
   return (
     <div className="h-screen w-64 bg-[#0A2342] text-white flex flex-col shadow-lg">
       <h1 className="p-6 text-2xl font-bold tracking-wide">Finance App</h1>
@@ -42,7 +44,10 @@ export default function Sidebar({
       <div className="flex-grow"></div>
       <div className="p-4">
         <button
-          onClick={() => onChange("signout")}
+          onClick={() => {
+            logout();
+            onChange("signout");
+          }}
           className="flex items-center gap-3 px-4 py-2 w-full rounded-lg bg-red-600 hover:bg-red-700 transition-all text-left"
         >
           <FiLogOut size={20} />
